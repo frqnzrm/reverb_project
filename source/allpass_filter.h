@@ -49,16 +49,24 @@ public:
     /// \details First the the buffer vector gets cleared and then the longest possible buffersize is written with zeros.
     /// \param bufsizeIn the initial buffersize
     void initBuffer(int bufsizeIn);
+    bool ready();
     
 private:
     float feedback;
     std::vector<float> buffer;
     unsigned long bufsize;
+    unsigned long bufsize_written;
     unsigned long oldbufsize = 0;
-    unsigned long bufidx_read;
+    float bufidx_read;
     unsigned long bufidx_write;
-    bool interpolate = false;
-    bool halfstep = false;
+    float read_buffer(float value, float buffer_step);
+    float buffer_step;
+    float decreaser;
+    float increaser;
+    bool write_done;
+    bool read_done;
+    bool read_new_bufsize = false;
+    float step_diff;
 };
 
 #endif /* allpass_filter_h */

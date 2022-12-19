@@ -19,15 +19,13 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                std::make_unique<juce::AudioParameterBool>  (PARAM_FREEZE_ID, "Freeze", initialfreeze)
        })
 {
-    for (auto & parameterID : parameterIDs) {
-        parameters.addParameterListener(parameterID, this);
-    }
+    for (auto & parameterID : parameterIDs) parameters.addParameterListener(parameterID, this);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
     for (auto & parameterID : parameterIDs) {
-        parameters.removeParameterListener(parameterID, this);
+        if (parameterID != PARAM_ROOM_SIZE_ID) parameters.removeParameterListener(parameterID, this);
     }
 }
 
@@ -124,6 +122,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
             comb_buffer_size[i][j] = 0;
             comb_buffer_size[i][j] = (int) ((i*spreadvalue) + (comb_buffer_tuning[j]*max_comb_buffactor));
             comb[i][j].initBuffer(comb_buffer_size[i][j]);
+            std::cout << comb[i][j].ready() << std::endl;
         }
         for (int j = 0; j < numallpasses; j++){
             max_allpass_buffactor = (1 + (scale_allpass_buffer)-(scale_allpass_buffer/2));
@@ -180,6 +179,8 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 {
     juce::ScopedNoDenormals noDenormals;
     
+    bool ready = true;
+    
     inputBuffer.clear();
     
     for(int channel=0; channel<numInputChannels; channel++) {
@@ -219,6 +220,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     {
         writePointerACN0[sample] = readoutPointerACN0[sample] / (numOutputChannels-1);
     }
+    for (int i = 0; i < numOutputChannels-1; i++){
+        for (int j = 0; j < numcombs; j++){
+            if (not comb[i][j].ready()) ready = false;
+        }
+        for (int j = 0; j < numallpasses; j++){
+            if (not allpass[i][j].ready()) ready = false;
+        }
+    }
+    if (newroom != oldroom && ready == true) setroomsize(newroom);
 }
 
 //==============================================================================
@@ -255,7 +265,7 @@ void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID
     } else if (parameterID == PARAM_WET_ID) {
         setwet(newValue);
     } else if (parameterID == PARAM_ROOM_SIZE_ID) {
-        setroomsize(newValue);
+        newroom = newValue;
     } else if (parameterID == PARAM_DAMP_ID) {
         setdamp(newValue);
     } else if (parameterID == PARAM_FREEZE_ID) {

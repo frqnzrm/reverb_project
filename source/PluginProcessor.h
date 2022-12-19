@@ -144,6 +144,7 @@ private:
     bool     freezemode;
     float    damp_comb;
     float    feedback_filters;
+    float    newroom;
     float    oldroom;
     int      numInputChannels;
     int      numOutputChannels;
