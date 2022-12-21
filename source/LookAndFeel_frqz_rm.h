@@ -60,8 +60,8 @@ public:
         g.setColour(juce::Colours::lightgrey);
         g.fillPath(p);
         
-        slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
         slider.setRange(0., 1.);
+//        slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
     }
     
     juce::Font getLabelFont (juce::Label& label) override

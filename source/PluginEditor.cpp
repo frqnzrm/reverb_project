@@ -3,15 +3,19 @@
 
 SlidersComponent::SlidersComponent()
 {
+    wetSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
     wetSlider.setSliderStyle(juce::Slider::Rotary);
     addAndMakeVisible(wetSlider);
     
+    drySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
     drySlider.setSliderStyle(juce::Slider::Rotary);
     addAndMakeVisible(drySlider);
     
+    dampeningSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
     dampeningSlider.setSliderStyle(juce::Slider::Rotary);
     addAndMakeVisible(dampeningSlider);
     
+    roomsizeSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
     roomsizeSlider.setSliderStyle(juce::Slider::Rotary);
     addAndMakeVisible(roomsizeSlider);
     
@@ -35,6 +39,7 @@ SlidersComponent::SlidersComponent()
 void SlidersComponent::resized()
 {
     auto area = getLocalBounds();
+    DBG(getLocalBounds().toString());
     area.removeFromTop(getHeight()/6);
     
     auto sliderWidth = getWidth()/4;
@@ -47,7 +52,6 @@ void SlidersComponent::resized()
 
 MainContentComponent::MainContentComponent()
 {
-//    setLookAndFeel(& LookAndFeel_frqz_rm);
     addAndMakeVisible (sliders);
 }
 

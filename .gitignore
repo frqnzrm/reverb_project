@@ -1,6 +1,4 @@
 /build/
-Modules/JUCE/
-/cmake-build-debug/
-/cmake-build-release/
+/modules/JUCE/
 .idea/
 .DS_Store

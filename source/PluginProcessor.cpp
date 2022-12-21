@@ -122,7 +122,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
             comb_buffer_size[i][j] = 0;
             comb_buffer_size[i][j] = (int) ((i*spreadvalue) + (comb_buffer_tuning[j]*max_comb_buffactor));
             comb[i][j].initBuffer(comb_buffer_size[i][j]);
-            std::cout << comb[i][j].ready() << std::endl;
+//            std::cout << comb[i][j].ready() << std::endl;
         }
         for (int j = 0; j < numallpasses; j++){
             max_allpass_buffactor = (1 + (scale_allpass_buffer)-(scale_allpass_buffer/2));
@@ -229,6 +229,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         }
     }
     if (newroom != oldroom && ready == true) setroomsize(newroom);
+    else if (newroom != oldroom) std::cout << "Not ready!" << std::endl;
 }
 
 //==============================================================================

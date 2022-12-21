@@ -655,7 +655,7 @@ public:
                             )
         : juce::DocumentWindow (title, backgroundColour, juce::DocumentWindow::minimiseButton | juce::DocumentWindow::closeButton)
     {
-        setLookAndFeel (&LookAndFeel_frqz_rm);
+//        setLookAndFeel (&LookAndFeel_frqz_rm);
        #if JUCE_IOS || JUCE_ANDROID
         setTitleBarHeight (0);
        #endif
@@ -743,7 +743,7 @@ public:
         m.addSeparator();
         m.addItem (4, TRANS("Reset to default state"));
 
-        m.setLookAndFeel (&LookAndFeel_frqz_rm);
+//        m.setLookAndFeel (&LookAndFeel_frqz_rm);
         m.showMenuAsync (juce::PopupMenu::Options(),
                          juce::ModalCallbackFunction::forComponent (menuCallback, this));
     }
@@ -842,7 +842,7 @@ private:
                   settingsButton ("Settings")
                  #endif
             {
-                setLookAndFeel (&LookAndFeel_frqz_rm);
+//                setLookAndFeel (&LookAndFeel_frqz_rm);
                 setOpaque (true);
 
                 settingsButton.addListener (settingsButtonListener);
@@ -864,7 +864,7 @@ private:
             {
                 auto r = getLocalBounds();
 
-                g.setColour (LookAndFeel_frqz_rm.ClBackground);
+//                g.setColour (LookAndFeel_frqz_rm.ClBackground);
                 g.fillRect (r);
             }
 
@@ -909,7 +909,7 @@ private:
             SimpleLabel lbMuted;
             std::unique_ptr<SimpleLabel> jackDeviceName;
             juce::TextButton settingsButton;
-            LaF LookAndFeel_frqz_rm;
+//            LaF LookAndFeel_frqz_rm;
         };
 
         void timerCallback() override
@@ -957,7 +957,7 @@ private:
     };
 
     //==============================================================================
-    LaF LookAndFeel_frqz_rm;
+//    LaF LookAndFeel_frqz_rm;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyStandaloneFilterWindow)
 };
