@@ -150,7 +150,6 @@ bool comb_filter::ready(){
         return true;
     }
     else{
-        std::cout << "false" << std::endl;
         return false;
     }
 }

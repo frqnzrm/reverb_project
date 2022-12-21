@@ -149,6 +149,7 @@ private:
     int      numInputChannels;
     int      numOutputChannels;
     float    *ACN_normalization;
+    float    sum_ACN_normalization;
 
     std::array<std::string, 5> parameterIDs = {PARAM_DRY_ID, PARAM_WET_ID, PARAM_ROOM_SIZE_ID, PARAM_DAMP_ID, PARAM_FREEZE_ID};
 

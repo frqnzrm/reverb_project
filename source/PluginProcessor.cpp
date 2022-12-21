@@ -107,6 +107,7 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     numOutputChannels = getTotalNumOutputChannels();
     
     ACN_normalization = new float [numOutputChannels];
+    sum_ACN_normalization = 0.f;
     
     comb= new comb_filter * [numOutputChannels-1];
     comb_buffer_size = new int * [numOutputChannels-1];
@@ -211,14 +212,15 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             for(int j = 0; j<numallpasses; j++){
                 writePointer[sample] = allpass[channel-1][j].process(readoutPointer[sample]);
             }
-            writePointer[sample] = (wet_factor * readoutPointer[sample] + dry * readinPointer[sample]) * ACN_normalization[channel];
-            writePointerACN0[sample] += readoutPointer[sample];
+            writePointer[sample] = (wet_factor * readoutPointer[sample]) * ACN_normalization[channel];
+            writePointerACN0[sample] += writePointer[sample];
         }
     }
+    
 
     for(int sample = 0; sample < buffer.getNumSamples(); ++sample)
     {
-        writePointerACN0[sample] = readoutPointerACN0[sample] / (numOutputChannels-1);
+        writePointerACN0[sample] = readoutPointerACN0[sample] / sum_ACN_normalization + dry * readinPointer[sample] * ACN_normalization[0];
     }
     for (int i = 0; i < numOutputChannels-1; i++){
         for (int j = 0; j < numcombs; j++){
@@ -412,6 +414,8 @@ void AudioPluginAudioProcessor::SN3D_normalization(int channelnum){
             ACN_normalization[i] = std::sqrtf(2/(4*12*M_PI))/std::sqrtf(1/(4*M_PI));
         }
         std::cout << "ACN " << i << " norm factor: " << ACN_normalization[i] << std::endl;
+        
+        sum_ACN_normalization += ACN_normalization[i];
     }
-    std::cout << "normalization according to SN3D/ambiX standard" << std::endl;
+    std::cout << "normalization according to SN3D/ambiX standard (sum = " << sum_ACN_normalization << ")" << std::endl;
 }

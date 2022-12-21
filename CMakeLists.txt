@@ -16,9 +16,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(Reverb VERSION 0.0.1)
 
-set_property (GLOBAL PROPERTY USE_FOLDERS YES)
-set_directory_properties (PROPERTIES JUCE_COPY_PLUGIN_AFTER_BUILD ON)
-
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
 # included JUCE directly in your source tree (perhaps as a submodule), you'll need to tell CMake to
@@ -45,7 +42,7 @@ juce_add_plugin(Reverb
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME SeamLess                          # Specify the name of the plugin's author
+    COMPANY_NAME freqzrm                          # Specify the name of the plugin's author
     # IS_SYNTH TRUE/FALSE                       # Is this a synth or an effect?
     # NEEDS_MIDI_INPUT TRUE/FALSE               # Does the plugin need midi input?
     # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
@@ -56,8 +53,8 @@ juce_add_plugin(Reverb
     MICROPHONE_PERMISSION_TEXT "Need access to your audio interface"
 
     # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
-    PLUGIN_MANUFACTURER_CODE Juce               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE Dem0                            # A unique four-character plugin id with exactly one upper-case character
+    PLUGIN_MANUFACTURER_CODE FQZR               # A four-character manufacturer id with at least one upper-case character
+    PLUGIN_CODE Rev0                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "Reverb")        # The name of the final executable, which can differ from the target name
@@ -71,8 +68,7 @@ juce_add_plugin(Reverb
 juce_generate_juce_header(Reverb)
 
 include_directories (resources/ /usr/local/include)
-add_compile_definitions (DONT_SET_USING_JUCE_NAMESPACE=1
-                         JUCE_MODAL_LOOPS_PERMITTED=1)
+add_compile_definitions (DONT_SET_USING_JUCE_NAMESPACE=1)
 
 # `target_sources` adds source files to a target. We pass the target that needs the sources as the
 # first argument, then a visibility parameter for the sources which should normally be PRIVATE.
