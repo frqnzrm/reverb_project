@@ -139,6 +139,7 @@ bool allpass_filter::ready(){
         return true;
     }
     else{
+//        std::cout << "Stepdiff = " << step_diff << std::endl;
         return false;
     }
 }

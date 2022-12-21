@@ -123,22 +123,23 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
             comb_buffer_size[i][j] = 0;
             comb_buffer_size[i][j] = (int) ((i*spreadvalue) + (comb_buffer_tuning[j]*max_comb_buffactor));
             comb[i][j].initBuffer(comb_buffer_size[i][j]);
-//            std::cout << comb[i][j].ready() << std::endl;
+            std::cout << comb[i][j].ready() << std::endl;
         }
         for (int j = 0; j < numallpasses; j++){
             max_allpass_buffactor = (1 + (scale_allpass_buffer)-(scale_allpass_buffer/2));
             allpass_buffer_size[i][j] = 0;
             allpass_buffer_size[i][j] = (int) ((i*spreadvalue) + (allpass_buffer_tuning[j]*max_allpass_buffactor));
             allpass[i][j].initBuffer(allpass_buffer_size[i][j]);
+            std::cout << allpass[i][j].ready() << std::endl;
         }
     }
     
     setwet(initialwet);
     setdry(initialdry);
-    setroomsize(initialroom);
     setdamp(initialdamp);
     setfreezemode(initialfreeze);
     SN3D_normalization(numOutputChannels);
+    setroomsize(initialroom);
     
     std::cout << "number Output Channels: " << numOutputChannels << std::endl;
     std::cout << "number Input Channels: " << numInputChannels << std::endl;
@@ -180,8 +181,6 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 {
     juce::ScopedNoDenormals noDenormals;
     
-    bool ready = true;
-    
     inputBuffer.clear();
     
     for(int channel=0; channel<numInputChannels; channel++) {
@@ -222,16 +221,22 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     {
         writePointerACN0[sample] = readoutPointerACN0[sample] / sum_ACN_normalization + dry * readinPointer[sample] * ACN_normalization[0];
     }
-    for (int i = 0; i < numOutputChannels-1; i++){
-        for (int j = 0; j < numcombs; j++){
-            if (not comb[i][j].ready()) ready = false;
+    
+    if (newroom != oldroom){
+        bool ready = true;
+        for (int i = 0; i < numOutputChannels-1; i++){
+            for (int j = 0; j < numcombs; j++){
+                if (not comb[i][j].ready()) ready = false;
+                std::cout << comb[i][j].ready() << std::endl;
+            }
+            for (int j = 0; j < numallpasses; j++){
+                if (not allpass[i][j].ready()) ready = false;
+                std::cout << allpass[i][j].ready() << std::endl;
+            }
         }
-        for (int j = 0; j < numallpasses; j++){
-            if (not allpass[i][j].ready()) ready = false;
-        }
+        if (ready == true) setroomsize(newroom);
+        else if (newroom != oldroom) std::cout << "Not ready!" << std::endl;
     }
-    if (newroom != oldroom && ready == true) setroomsize(newroom);
-    else if (newroom != oldroom) std::cout << "Not ready!" << std::endl;
 }
 
 //==============================================================================
